@@ -178,3 +178,11 @@ SILENCED_SYSTEM_CHECKS = ['mongodb.fields.auto.E001']
 
 # Test runner personalizado para MongoDB
 TEST_RUNNER = 'escolar_api.test_runner.MongoDBTestRunner'
+
+# Desactivar migraciones conflictivas para MongoDB
+MIGRATION_MODULES = {
+    'auth': None,
+    'contenttypes': None,
+    'sessions': None,
+    'admin': None,
+}

@@ -5,4 +5,4 @@ set -o errexit
 pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
-python manage.py migrate
+# Omitimos migrate en MongoDB para evitar el error de __fake__.ContentType
