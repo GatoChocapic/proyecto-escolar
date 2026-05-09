@@ -165,11 +165,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "http://localhost:4205",
-    "https://GatoChocapic.github.io",
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'escolar_api.Usuario'
 
@@ -180,10 +176,11 @@ SILENCED_SYSTEM_CHECKS = ['mongodb.fields.auto.E001']
 # Test runner personalizado para MongoDB
 TEST_RUNNER = 'escolar_api.test_runner.MongoDBTestRunner'
 
-# Desactivar migraciones conflictivas para MongoDB
-MIGRATION_MODULES = {
-    'auth': None,
-    'contenttypes': None,
-    'sessions': None,
-    'admin': None,
-}
+# Desactivar migraciones conflictivas solo en producción (MongoDB Render)
+if not DEBUG:
+    MIGRATION_MODULES = {
+        'auth': None,
+        'contenttypes': None,
+        'sessions': None,
+        'admin': None,
+    }
