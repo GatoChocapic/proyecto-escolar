@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -89,7 +90,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django_mongodb_backend",
         "NAME": "escolar_db",
-        "HOST": f"mongodb+srv://ignacioahm95_db_user:{os.getenv('MONGODB_PASSWORD')}@clusterpruebas.rs5o1bw.mongodb.net/?appName=ClusterPruebas",
+        "HOST": f"mongodb+srv://ignacioahm95_db_user:{quote_plus(os.getenv('MONGODB_PASSWORD', ''))}@clusterpruebas.rs5o1bw.mongodb.net/?appName=ClusterPruebas",
         "TEST": {
             "NAME": "test_escolar_db",
             "MIGRATE": False,
