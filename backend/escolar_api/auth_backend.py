@@ -4,19 +4,32 @@ from .models import Usuario
 
 class DualAuthenticationBackend(ModelBackend):
     """
-    Backend de autenticación que permite loguearse usando el username (RUT) 
-    o el email indistintamente.
+    Backend de autenticación que permite loguearse usando el username
+    o el email indistintamente. Prioriza siempre el username exacto.
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
+        user = None
+        
+        # Paso 1: Intentar login por username exacto (incluye RUT de alumnos)
         try:
-            # Busca al usuario que coincida con el username O con el email
-            user = Usuario.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
-            
-            # Verifica la contraseña
-            if user.check_password(password) and self.user_can_authenticate(user):
-                return user
+            user = Usuario.objects.get(username__iexact=username)
         except Usuario.DoesNotExist:
-            return None
+            pass
         except Exception:
-            return None
+            pass
+        
+        # Paso 2: Si no encontró por username, buscar por email
+        if user is None:
+            try:
+                user = Usuario.objects.get(email__iexact=username)
+            except Usuario.DoesNotExist:
+                return None
+            except Exception:
+                # Si hay múltiples con ese email, no autenticar
+                return None
+        
+        # Verificar contraseña y que el usuario pueda autenticarse
+        if user and user.check_password(password) and self.user_can_authenticate(user):
+            return user
+        
         return None
