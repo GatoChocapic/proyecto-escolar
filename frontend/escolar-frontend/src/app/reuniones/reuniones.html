@@ -1,0 +1,89 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/docente">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>Gestión de Reuniones</span>
+</mat-toolbar>
+
+<div class="content">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ editingItem() ? 'Editar Reunión' : 'Citar Nueva Reunión' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="reunionForm" (ngSubmit)="onSubmit()" class="eval-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Título de la Reunión</mat-label>
+          <input matInput formControlName="titulo" placeholder="Ej: Reunión de Apoderados" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha y Hora</mat-label>
+          <input matInput type="datetime-local" formControlName="fecha_hora" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Curso</mat-label>
+          <mat-select formControlName="curso" required>
+            <mat-option value="1° Básico">1° Básico</mat-option>
+            <mat-option value="2° Básico">2° Básico</mat-option>
+            <mat-option value="3° Básico">3° Básico</mat-option>
+            <mat-option value="4° Básico">4° Básico</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Enlace Virtual (Opcional)</mat-label>
+          <input matInput formControlName="link_virtual" placeholder="https://meet.google.com/...">
+          <mat-icon matSuffix>link</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tabla de Temas / Descripción</mat-label>
+          <textarea matInput formControlName="descripcion" rows="4" required></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-raised-button color="accent" type="submit" [disabled]="!reunionForm.valid || isSubmitting()" class="full-width">
+            {{ isSubmitting() ? 'Agendando...' : (editingItem() ? 'Actualizar Reunión' : 'Programar Reunión') }}
+          </button>
+          @if (editingItem()) {
+            <button mat-stroked-button type="button" (click)="cancelarEdicion()" class="full-width">Cancelar</button>
+          }
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="list-card">
+    <mat-card-header>
+      <mat-card-title>Reuniones Programadas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoading()) {
+        <div class="loading-container"><mat-spinner diameter="40"></mat-spinner><p>Cargando...</p></div>
+      } @else if (reuniones().length === 0) {
+        <p class="empty-state">No tienes reuniones programadas.</p>
+      } @else {
+        <table mat-table [dataSource]="reuniones()" class="mat-elevation-z0 full-width">
+          <ng-container matColumnDef="titulo">
+            <th mat-header-cell *matHeaderCell> Título </th>
+            <td mat-cell *matCell="let row"> {{row.titulo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCell> Fecha y Hora </th>
+            <td mat-cell *matCell="let row"> {{row.fecha_hora | date:'dd/MM/yyyy HH:mm'}} </td>
+          </ng-container>
+          <ng-container matColumnDef="curso">
+            <th mat-header-cell *matHeaderCell> Curso </th>
+            <td mat-cell *matCell="let row"> {{row.curso}} </td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCell></th>
+            <td mat-cell *matCell="let row">
+              <button mat-icon-button color="primary" (click)="editar(row)" matTooltip="Editar"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="eliminar(row.id)" matTooltip="Eliminar"><mat-icon>delete</mat-icon></button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['titulo', 'fecha', 'curso', 'acciones']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['titulo', 'fecha', 'curso', 'acciones'];"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

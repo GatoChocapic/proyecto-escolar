@@ -1,0 +1,181 @@
+<div class="header-bar">
+  <div class="header-left">
+    <span class="material-icons header-icon">admin_panel_settings</span>
+    <h1 class="header-title">Panel de Administración</h1>
+  </div>
+  <div class="header-right">
+    <button class="btn-theme-toggle" (click)="themeService.toggleTheme()" [title]="themeService.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span class="material-icons">{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+    <div class="user-info" style="display: block;">
+      <span class="user-name">Admin</span>
+    </div>
+    <button class="btn-logout" (click)="logout()">
+      <span class="material-icons">logout</span>
+      <span class="btn-text">Cerrar</span>
+    </button>
+  </div>
+</div>
+
+<div class="page-container">
+  
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: var(--brand);">
+        <span class="material-icons">school</span>
+      </div>
+      <div class="stat-value">{{ getResumenRoles().docentes }}</div>
+      <div class="stat-label">Docentes</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon" style="background: var(--success);">
+        <span class="material-icons">family_restroom</span>
+      </div>
+      <div class="stat-value">{{ getResumenRoles().apoderados }}</div>
+      <div class="stat-label">Apoderados</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon" style="background: var(--warning);">
+        <span class="material-icons">groups</span>
+      </div>
+      <div class="stat-value">{{ estudiantes().length }}</div>
+      <div class="stat-label">Estudiantes</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon" style="background: var(--danger);">
+        <span class="material-icons">shield</span>
+      </div>
+      <div class="stat-value">{{ getResumenRoles().admins }}</div>
+      <div class="stat-label">Admins</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    
+    <!-- Formulario Estudiante -->
+    <div class="content-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="material-icons">{{ editingEstudiante() ? 'edit' : 'person_add' }}</span>
+          {{ editingEstudiante() ? 'Editar Estudiante' : 'Nuevo Estudiante' }}
+        </h3>
+      </div>
+      <div class="card-body" style="padding: 20px;">
+        <form [formGroup]="estudianteForm" (ngSubmit)="onSubmitEstudiante()" class="admin-form">
+          <div class="form-group">
+            <label class="form-label">Nombre Completo</label>
+            <input type="text" class="form-input" formControlName="nombre_completo" placeholder="Ej: Juan Pérez González" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Apoderado</label>
+            <select class="form-select" formControlName="apoderado" required>
+              @for (apo of apoderados(); track apo.id) {
+                <option [value]="apo.id">{{ apo.first_name || apo.username }} {{ apo.last_name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Curso</label>
+            <select class="form-select" formControlName="curso" required>
+              <option value="1° Básico">1° Básico</option>
+              <option value="2° Básico">2° Básico</option>
+              <option value="3° Básico">3° Básico</option>
+              <option value="4° Básico">4° Básico</option>
+            </select>
+          </div>
+
+          <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" [disabled]="!estudianteForm.valid || isSubmitting()">
+              <span class="material-icons">save</span>
+              {{ isSubmitting() ? 'Guardando...' : (editingEstudiante() ? 'Actualizar' : 'Crear Estudiante') }}
+            </button>
+            @if (editingEstudiante()) {
+              <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+                <span class="material-icons">cancel</span>
+                Cancelar
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de Estudiantes -->
+    <div class="content-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="material-icons">list</span>
+          Lista de Estudiantes
+        </h3>
+      </div>
+      <div class="card-body">
+        @if (isLoadingStudents()) {
+          <div class="loading-container"><mat-spinner diameter="40"></mat-spinner></div>
+        } @else if (estudiantes().length === 0) {
+          <div class="empty-state">
+            <span class="material-icons">groups</span>
+            <p>No hay estudiantes registrados.</p>
+          </div>
+        } @else {
+          @for (est of estudiantes(); track est.id) {
+            <div class="list-item">
+              <div class="list-icon" style="background: var(--brand-light);">
+                <span class="material-icons" style="color: var(--brand);">person</span>
+              </div>
+              <div class="list-content">
+                <span class="title">{{ est.nombre_completo }}</span>
+                <span class="subtitle">Curso: {{ est.curso }} | Apoderado: {{ est.apoderado_nombre }}</span>
+              </div>
+              <div class="action-buttons" style="display: flex; gap: 8px;">
+                <button class="btn-icon-small edit" (click)="editarEstudiante(est)" title="Editar" style="color: var(--brand);">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="btn-icon-small delete" (click)="eliminarEstudiante(est.id)" title="Eliminar" style="color: var(--danger);">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card" style="margin-top: 22px;">
+    <div class="card-header">
+      <h3 class="card-title">
+        <span class="material-icons">people</span>
+        Usuarios del Sistema
+      </h3>
+    </div>
+    <div class="card-body">
+      @if (isLoadingUsers()) {
+        <div class="loading-container"><mat-spinner diameter="40"></mat-spinner></div>
+      } @else if (usuarios().length === 0) {
+        <div class="empty-state">
+          <span class="material-icons">person_off</span>
+          <p>No hay usuarios registrados.</p>
+        </div>
+      } @else {
+        @for (usr of usuarios(); track usr.id) {
+          <div class="list-item">
+            <div class="list-icon" [style.background]="usr.is_active ? 'var(--success)' : 'var(--danger)'">
+              <span class="material-icons">{{ usr.is_active ? 'check_circle' : 'cancel' }}</span>
+            </div>
+            <div class="list-content">
+              <span class="title">{{ usr.username }} ({{ usr.rol_display }})</span>
+              <span class="subtitle">{{ usr.email || 'Sin correo registrado' }}</span>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+</div>

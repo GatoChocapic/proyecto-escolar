@@ -1,0 +1,233 @@
+<div class="header-bar">
+  <div class="header-left">
+    <span class="material-icons header-icon">family_restroom</span>
+    <h1 class="header-title">Panel del Apoderado</h1>
+  </div>
+  <div class="header-right">
+    <button class="btn-theme-toggle" (click)="themeService.toggleTheme()" [title]="themeService.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span class="material-icons">{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+    <div class="user-info" style="display: block;">
+      <span class="user-name">{{ username }}</span>
+    </div>
+    <button class="btn-logout" (click)="logout()">
+      <span class="material-icons">logout</span>
+      <span class="btn-text">Cerrar</span>
+    </button>
+  </div>
+</div>
+
+<div class="page-container">
+  
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando información familiar...</p>
+    </div>
+  } @else {
+    
+    <!-- Selector de Hijo (Perfil) -->
+    <div class="student-selector-bar">
+      @for (hijo of hijos(); track hijo.id) {
+        <div class="student-chip" [class.active]="hijoSeleccionado()?.id === hijo.id" (click)="seleccionarHijo(hijo)">
+          <div class="avatar-mini">{{ hijo.nombre_completo.substring(0, 1) }}</div>
+          <div class="chip-info">
+            <span class="name">{{ hijo.nombre_completo }}</span>
+            <span class="course">{{ hijo.nivel }} {{ hijo.seccion }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="dashboard-grid">
+      
+      <!-- COLUMNA PRINCIPAL -->
+      <div class="main-column">
+        
+        <!-- Resumen Rápido -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--brand-light); color: var(--brand);">
+              <span class="material-icons">grade</span>
+            </div>
+            <div class="stat-value">
+              {{ calificaciones().length > 0 ? (promedioGeneral | number:'1.1-1') : 'N/A' }}
+            </div>
+            <div class="stat-label">Promedio Gral.</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+              <span class="material-icons">task_alt</span>
+            </div>
+            <div class="stat-value">{{ asistenciaPorcentaje | number:'1.0-0' }}%</div>
+            <div class="stat-label">Asistencia</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+              <span class="material-icons">assignment_late</span>
+            </div>
+            <div class="stat-value">{{ evaluaciones().length }}</div>
+            <div class="stat-label">Próximas Eval.</div>
+          </div>
+        </div>
+
+        <!-- Calificaciones Recientes -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span class="material-icons">analytics</span>
+              Calificaciones Recientes
+            </h3>
+          </div>
+          <div class="card-body">
+            @if (isLoadingData()) {
+              <div class="loading-container"><mat-spinner diameter="30"></mat-spinner></div>
+            } @else if (calificaciones().length === 0) {
+              <div class="empty-state">
+                <span class="material-icons">sentiment_neutral</span>
+                <p>No hay notas registradas para este periodo.</p>
+              </div>
+            } @else {
+              <div class="grades-grid">
+                @for (nota of calificaciones().slice(0, 4); track nota.id) {
+                  <div class="grade-item">
+                    <div class="grade-info">
+                      <span class="grade-title">{{ nota.evaluacion_nombre }}</span>
+                      <span class="grade-date">{{ nota.fecha_registro | date:'shortDate' }}</span>
+                    </div>
+                    <div class="grade-badge" [class.rojo]="nota.valor < 4">
+                      {{ nota.valor | number:'1.1-1' }}
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Calendario de Evaluaciones -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span class="material-icons">event_note</span>
+              Próximas Evaluaciones
+            </h3>
+          </div>
+          <div class="card-body">
+            @if (evaluaciones().length === 0) {
+              <div class="empty-state">
+                <span class="material-icons">check_circle_outline</span>
+                <p>¡Todo al día! No hay evaluaciones pendientes.</p>
+              </div>
+            } @else {
+              @for (eval of evaluaciones(); track eval.id) {
+                <div class="list-item">
+                  <div class="list-icon eval">
+                    <span class="material-icons">assignment</span>
+                  </div>
+                  <div class="list-content">
+                    <span class="title">{{ eval.titulo }}</span>
+                    <span class="subtitle">{{ eval.asignatura }} | {{ eval.fecha_evaluacion | date:'fullDate' }}</span>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMNA LATERAL -->
+      <div class="side-column">
+        
+        <!-- Próximas Reuniones -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span class="material-icons">groups</span>
+              Citaciones
+            </h3>
+          </div>
+          <div class="card-body">
+            @if (reuniones().length === 0) {
+              <div class="empty-state">
+                <p>No hay citaciones vigentes.</p>
+              </div>
+            } @else {
+              @for (reun of reuniones(); track reun.id) {
+                <div class="citacion-card">
+                  <div class="citacion-header">
+                    <span class="material-icons">calendar_today</span>
+                    {{ reun.fecha_hora | date:'shortDate' }} - {{ reun.fecha_hora | date:'shortTime' }}
+                  </div>
+                  <div class="citacion-body">
+                    <strong>{{ reun.titulo }}</strong>
+                    <p>{{ reun.descripcion }}</p>
+                  </div>
+                  <div class="citacion-actions">
+                    <button mat-flat-button color="primary">Confirmar</button>
+                    @if (reun.link_virtual) {
+                      <a mat-button [href]="reun.link_virtual" target="_blank">Enlace</a>
+                    }
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <!-- Observaciones Conductuales -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span class="material-icons">history_edu</span>
+              Observaciones
+            </h3>
+          </div>
+          <div class="card-body">
+            @for (anot of anotaciones().slice(0, 3); track anot.id) {
+              <div class="list-item">
+                <div class="list-icon" [class.positiva]="anot.tipo === 'positiva'" [class.negativa]="anot.tipo === 'negativa'">
+                  <span class="material-icons">{{ anot.tipo === 'positiva' ? 'star' : 'warning' }}</span>
+                </div>
+                <div class="list-content">
+                  <span class="title" style="font-size: 0.9rem;">{{ anot.descripcion }}</span>
+                  <span class="subtitle">{{ anot.fecha | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Historial de Asistencia -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span class="material-icons">how_to_reg</span>
+              Asistencia Reciente
+            </h3>
+          </div>
+          <div class="card-body">
+            @for (asist of asistencias().slice(0, 5); track asist.id) {
+              <div class="list-item">
+                <div class="list-icon" [class.presente]="asist.presente" [class.falta]="!asist.presente">
+                  <span class="material-icons">{{ asist.presente ? 'check_circle' : 'cancel' }}</span>
+                </div>
+                <div class="list-content">
+                  <span class="title">{{ asist.fecha | date:'EEEE dd/MM' }}</span>
+                  <span class="subtitle">{{ asist.presente ? 'Presente' : 'Ausente' }}</span>
+                </div>
+                @if (!asist.presente) {
+                  <button mat-icon-button color="warn" title="Justificar">
+                    <span class="material-icons">edit_note</span>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,245 @@
+/* ============================================================
+   LOGIN PAGE – Gestión Estudiantil
+   ============================================================ */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('https://res.cloudinary.com/dyslpppz8/image/upload/q_auto/f_auto/v1775741611/ChatGPT_Image_9_abr_2026_10_22_23_a.m._ifgmqd.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+  position: relative;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(15, 17, 23, 0.9), rgba(15, 17, 23, 0.75));
+  z-index: 1;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── HEADER ────────────────────────────────────────────── */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: var(--shadow-brand);
+}
+
+.login-icon .material-icons {
+  color: #fff;
+  font-size: 36px;
+}
+
+.login-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ── FORM ───────────────────────────────────────────────── */
+.login-form { margin-bottom: 24px; }
+
+.form-group { margin-bottom: 20px; }
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.input-wrapper { position: relative; }
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 14px 14px 46px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 4px var(--brand-light);
+}
+
+.form-input::placeholder { color: var(--text-muted); }
+
+/* ── LOGIN BUTTON ────────────────────────────────────────── */
+.login-btn {
+  width: 100%;
+  height: 54px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--btn-primary-bg) !important;
+  border: none;
+  color: var(--btn-primary-txt);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  box-shadow: var(--shadow-brand);
+}
+
+.login-btn:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-btn .material-icons {
+  font-size: 22px;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+.login-footer {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.login-footer p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 10px 0;
+}
+
+.help-text {
+  margin-top: 16px !important;
+  color: var(--text-muted) !important;
+  font-size: 0.85rem !important;
+}
+
+/* ── THEME TOGGLE ─────────────────────────────────────────── */
+.theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--brand-light);
+  border-color: var(--brand);
+  color: var(--brand);
+  transform: scale(1.05);
+}
+
+.theme-toggle-btn .material-icons {
+  font-size: 24px;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .login-container { padding: 16px; }
+
+  .login-card {
+    padding: 32px 24px;
+    border-radius: var(--radius-xl);
+  }
+
+  .login-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+  }
+
+  .login-icon .material-icons { font-size: 32px; }
+  
+  .login-title { font-size: 1.5rem; }
+  .login-subtitle { font-size: 0.85rem; }
+
+  .form-input {
+    padding: 16px 14px 16px 46px;
+    font-size: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .login-btn { 
+    height: 52px;
+    border-radius: var(--radius-pill);
+  }
+  
+  .theme-toggle-btn {
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+}

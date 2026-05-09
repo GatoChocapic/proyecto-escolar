@@ -1,0 +1,197 @@
+/* Selector de Hijo */
+.student-selector-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding: 4px 4px 12px 4px;
+}
+
+.student-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: fit-content;
+}
+
+.student-chip:hover {
+  background: var(--bg-hover);
+  transform: translateY(-2px);
+  border-color: var(--brand);
+}
+
+.student-chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  box-shadow: 0 8px 16px var(--brand-muted);
+}
+
+.avatar-mini {
+  width: 32px;
+  height: 32px;
+  background: var(--brand-light);
+  color: var(--brand);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.student-chip.active .avatar-mini {
+  background: white;
+  color: var(--brand);
+}
+
+.chip-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.chip-info .name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.chip-info .course {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.student-chip.active .chip-info .name,
+.student-chip.active .chip-info .course {
+  color: white;
+}
+
+/* Grades Widget */
+.grades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.grade-item {
+  background: var(--bg-subtle);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid var(--brand);
+}
+
+.grade-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.grade-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.grade-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.grade-badge {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.grade-badge.rojo {
+  color: var(--danger);
+}
+
+/* Citaciones */
+.citacion-card {
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.citacion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+
+.citacion-body strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.citacion-body p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.citacion-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Layout Bento */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: slideInUp 0.5s ease-out;
+}
+
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 32px;
+  animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.page-container {
+  padding: 32px;
+  max-width: 1600px;
+  margin: 0 auto;
+}

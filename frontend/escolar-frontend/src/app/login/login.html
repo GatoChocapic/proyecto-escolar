@@ -1,0 +1,59 @@
+<div class="login-container">
+  <!-- Botón modo oscuro en esquina superior -->
+  <button class="theme-toggle-btn" (click)="themeService.toggleTheme()" [title]="themeService.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+    <span class="material-icons">{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</span>
+  </button>
+  
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-icon">
+        <span class="material-icons">school</span>
+      </div>
+      <h1 class="login-title">Sistema de Gestión</h1>
+      <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label class="form-label">RUT o Usuario</label>
+        <div class="input-wrapper">
+          <span class="material-icons input-icon">person</span>
+          <input 
+            type="text" 
+            class="form-input" 
+            formControlName="username"
+            placeholder="Ej: 12345678k"
+            required
+          >
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <div class="input-wrapper">
+          <span class="material-icons input-icon">lock</span>
+          <input 
+            type="password" 
+            class="form-input" 
+            formControlName="password"
+            placeholder="••••••••"
+            required
+          >
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary login-btn" [disabled]="!loginForm.valid || isLoading()">
+        @if (isLoading()) {
+          <mat-spinner diameter="20" color="accent"></mat-spinner>
+        } @else {
+          <span>Iniciar Sesión</span>
+          <span class="material-icons">arrow_forward</span>
+        }
+      </button>
+    </form>
+    
+    <div class="login-footer">
+      <p class="help-text">¿Necesitas ayuda? Contacta al administrador</p>
+    </div>
+  </div>
+</div>

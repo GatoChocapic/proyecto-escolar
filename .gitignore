@@ -1,0 +1,45 @@
+# ===== Python / Django =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django
+*.log
+db.sqlite3
+media/
+staticfiles/
+error.log
+
+# Entorno
+.env
+
+# ===== Node / Angular =====
+node_modules/
+dist/
+.angular/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scripts de desarrollo (no ir a producción)
+drop_db.py
+fix_migrations.py

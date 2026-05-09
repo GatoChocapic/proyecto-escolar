@@ -1,0 +1,77 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/docente">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>Registro Conductual</span>
+</mat-toolbar>
+
+<div class="content">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ editingItem() ? 'Editar Anotación' : 'Nueva Anotación' }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="anotacionForm" (ngSubmit)="onSubmit()" class="eval-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Seleccionar Estudiante</mat-label>
+          <mat-select formControlName="estudiante" required>
+            @for (est of estudiantes(); track est.id) {
+              <mat-option [value]="est.id">{{ est.nombre_completo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo" required>
+            <mat-option value="positiva">Positiva (+)</mat-option>
+            <mat-option value="negativa">Negativa (-)</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción / Observación</mat-label>
+          <textarea matInput formControlName="descripcion" rows="3" required></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-raised-button color="accent" type="submit" [disabled]="!anotacionForm.valid || isSubmitting()" class="full-width">
+            {{ isSubmitting() ? 'Guardando...' : (editingItem() ? 'Actualizar' : 'Registrar Anotación') }}
+          </button>
+          @if (editingItem()) {
+            <button mat-stroked-button type="button" (click)="cancelarEdicion()" class="full-width">Cancelar</button>
+          }
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="list-card">
+    <mat-card-header>
+      <mat-card-title>Mis Últimas Anotaciones</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoading()) {
+        <div class="loading-container"><mat-spinner diameter="40"></mat-spinner><p>Cargando...</p></div>
+      } @else if (anotaciones().length === 0) {
+        <p class="empty-state">No has registrado anotaciones recientemente.</p>
+      } @else {
+        <mat-list>
+          @for (anot of anotaciones(); track anot.id) {
+            <mat-list-item>
+              <mat-icon matListItemIcon [style.color]="anot.tipo === 'positiva' ? '#4caf50' : '#f44336'">
+                {{ anot.tipo === 'positiva' ? 'sentiment_satisfied' : 'sentiment_dissatisfied' }}
+              </mat-icon>
+              <div matListItemTitle>{{ anot.estudiante_nombre }}</div>
+              <div matListItemLine>{{ anot.descripcion }}</div>
+              <div matListItemLine class="date-text">{{ anot.fecha | date:'dd/MM/yyyy HH:mm' }}</div>
+              <div matListItemMeta>
+                <button mat-icon-button color="primary" (click)="editar(anot)" matTooltip="Editar"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" (click)="eliminar(anot.id)" matTooltip="Eliminar"><mat-icon>delete</mat-icon></button>
+              </div>
+            </mat-list-item>
+          }
+        </mat-list>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

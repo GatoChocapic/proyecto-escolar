@@ -1,0 +1,310 @@
+<div class="header-bar">
+  <div class="header-left">
+    <span class="material-icons header-icon">school</span>
+    <h1 class="header-title">Panel del Docente</h1>
+  </div>
+  <div class="header-right">
+    <button class="btn-theme-toggle" (click)="themeService.toggleTheme()" [title]="themeService.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span class="material-icons">{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+    <div class="user-info" style="display: block;">
+      <span class="user-name">{{ username }}</span>
+    </div>
+    <button class="btn-logout" (click)="logout()">
+      <span class="material-icons">logout</span>
+      <span class="btn-text">Cerrar</span>
+    </button>
+  </div>
+</div>
+
+<div class="page-container">
+  
+  @if (view() === 'dashboard') {
+    @if (isLoading()) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Cargando información del docente...</p>
+      </div>
+    } @else {
+      <div class="dashboard-grid">
+        
+        <!-- COLUMNA PRINCIPAL -->
+        <div class="main-column">
+          
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon evaluaciones">
+                <span class="material-icons">assignment</span>
+              </div>
+              <div class="stat-value">{{ evaluaciones().length }}</div>
+              <div class="stat-label">Evaluaciones</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon anotaciones">
+                <span class="material-icons">edit_note</span>
+              </div>
+              <div class="stat-value">{{ anotaciones().length }}</div>
+              <div class="stat-label">Anotaciones</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon reuniones">
+                <span class="material-icons">groups</span>
+              </div>
+              <div class="stat-value">{{ reuniones().length }}</div>
+              <div class="stat-label">Reuniones</div>
+            </div>
+          </div>
+          
+          <!-- Acciones Rápidas Modernas -->
+          <div class="quick-actions-grid">
+            <button class="quick-action-btn" (click)="irANotas()">
+              <span class="material-icons">edit_document</span>
+              <span>Subir Notas</span>
+            </button>
+            <button class="quick-action-btn" routerLink="/asistencia">
+              <span class="material-icons">how_to_reg</span>
+              <span>Pasar Asistencia</span>
+            </button>
+            <button class="quick-action-btn" routerLink="/evaluaciones">
+              <span class="material-icons">add_circle</span>
+              <span>Crear Evaluación</span>
+            </button>
+            <button class="quick-action-btn" routerLink="/reuniones">
+              <span class="material-icons">event_available</span>
+              <span>Programar Reunión</span>
+            </button>
+          </div>
+
+          <!-- Timeline: Clases del Día -->
+          <div class="content-card timeline-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span class="material-icons">schedule</span>
+                Horario del Día
+              </h3>
+            </div>
+            <div class="timeline-list">
+              @for (clase of clasesDelDia(); track clase.hora) {
+                <div class="timeline-item" [class.active]="clase.activa">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content">
+                    <div class="class-info">
+                      <span class="time-label">{{ clase.hora }}</span>
+                      <span class="title">{{ clase.curso }}</span>
+                      <span class="subtitle">{{ clase.asignatura }}</span>
+                    </div>
+                    @if (clase.activa) {
+                      <span class="active-badge">En curso</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Próximas Evaluaciones -->
+          <div class="card-grid" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+            <div class="content-card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <span class="material-icons">assignment</span>
+                  Próximas Evaluaciones
+                </h3>
+              </div>
+              <div class="card-body">
+                @if (evaluaciones().length === 0) {
+                  <div class="empty-state">
+                    <span class="material-icons">info</span>
+                    <p>No tienes evaluaciones programadas.</p>
+                  </div>
+                } @else {
+                  @for (eval of evaluaciones().slice(0, 3); track eval.id) {
+                    <div class="list-item">
+                      <div class="list-icon">
+                        <span class="material-icons">description</span>
+                      </div>
+                      <div class="list-content">
+                        <span class="title">{{ eval.titulo }}</span>
+                        <span class="subtitle">{{ eval.curso }} | {{ eval.fecha_evaluacion | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA LATERAL (Sidebar Inteligente) -->
+        <div class="side-column">
+          
+          <!-- Widget: Alumnos en Riesgo -->
+          <div class="content-card">
+            <div class="card-header">
+              <h3 class="card-title" style="color: var(--danger)">
+                <span class="material-icons">warning</span>
+                Alumnos en Riesgo
+              </h3>
+            </div>
+            <div class="card-body">
+              @for (alumno of alumnosEnRiesgo(); track alumno.nombre) {
+                <div class="risk-item">
+                  <div class="risk-avatar">
+                    {{ alumno.nombre.substring(0, 1) }}
+                  </div>
+                  <div class="risk-info">
+                    <span class="risk-name">{{ alumno.nombre }}</span>
+                    <span class="risk-meta">{{ alumno.curso }} | {{ alumno.alertas }} alertas</span>
+                  </div>
+                  <div class="risk-score">
+                    <span class="score-val">{{ alumno.promedio | number:'1.1-1' }}</span>
+                    <span class="score-label">Prom.</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Widget: Pendientes Académicos -->
+          <div class="content-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span class="material-icons">pending_actions</span>
+                Pendientes
+              </h3>
+            </div>
+            <div class="card-body">
+              @for (p of pendientes(); track p.titulo) {
+                <div class="pending-item" [class]="p.urgencia">
+                  <span class="pending-title">{{ p.titulo }}</span>
+                  <span class="pending-meta">{{ p.curso }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Actividad Reciente -->
+          <div class="content-card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span class="material-icons">history</span>
+                Actividad Reciente
+              </h3>
+            </div>
+            <div class="card-body">
+              @for (act of actividadReciente(); track act.texto) {
+                <div class="list-item">
+                  <div class="list-icon" style="background: var(--bg-hover); color: var(--brand)">
+                    <span class="material-icons">
+                      {{ act.tipo === 'evaluacion' ? 'assignment' : act.tipo === 'anotacion' ? 'edit_note' : 'groups' }}
+                    </span>
+                  </div>
+                  <div class="list-content">
+                    <span class="title" style="font-size: 0.85rem">{{ act.texto }}</span>
+                    <span class="subtitle">{{ act.fecha }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+    }
+  }
+
+  @if (view() === 'notas') {
+    <div class="view-header">
+      <button class="btn-icon-back" (click)="volverAlDashboard()">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <h2 class="view-title">Gestión de Calificaciones</h2>
+    </div>
+
+    <div class="card-grid">
+      <!-- Selector de Evaluación -->
+      <div class="content-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <span class="material-icons">fact_check</span>
+            1. Seleccione una Evaluación
+          </h3>
+        </div>
+        <div class="card-body">
+          <p class="card-instruction">Seleccione la prueba para cargar la lista de estudiantes por curso:</p>
+          <div class="eval-selection-list">
+            @for (ev of evaluaciones(); track ev.id) {
+              <div class="selectable-item" [class.active]="evaluacionSeleccionada()?.id === ev.id" (click)="seleccionarEvaluacion(ev)">
+                <div class="item-info">
+                  <span class="item-title">{{ ev.titulo }}</span>
+                  <span class="item-subtitle">{{ ev.curso }} | {{ ev.asignatura }}</span>
+                </div>
+                <span class="material-icons icon-active">check_circle</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Ingreso de Notas -->
+      <div class="content-card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <h3 class="card-title">
+              <span class="material-icons">list_alt</span>
+              2. Ingresar Calificaciones
+            </h3>
+          </div>
+          @if (alumnosCurso().length > 0) {
+            <button class="btn btn-primary" [disabled]="isSubmitting()" (click)="guardarNotas()">
+              <span class="material-icons">save</span>
+              {{ isSubmitting() ? 'Guardando...' : 'Guardar Notas' }}
+            </button>
+          }
+        </div>
+        <div class="card-body">
+          @if (!evaluacionSeleccionada()) {
+            <div class="empty-state">
+              <span class="material-icons">touch_app</span>
+              <p>Seleccione una evaluación a la izquierda para cargar los alumnos.</p>
+            </div>
+          } @else if (isLoadingAlumnos()) {
+            <div class="loading-container">
+              <mat-spinner diameter="30"></mat-spinner>
+              <p>Cargando lista de curso...</p>
+            </div>
+          } @else if (alumnosCurso().length === 0) {
+            <div class="empty-state">
+              <span class="material-icons">warning</span>
+              <p>No se encontraron alumnos registrados en el curso {{ evaluacionSeleccionada().curso }}.</p>
+            </div>
+          } @else {
+            <div class="grades-table">
+              @for (alumno of alumnosCurso(); track alumno.id) {
+                <div class="grade-row">
+                  <div class="student-name">
+                    <span class="material-icons">person</span>
+                    {{ alumno.nombre_completo }}
+                  </div>
+                  <div class="grade-input-container">
+                    <input type="text" 
+                           #gradeInput
+                           class="grade-input" 
+                           placeholder="7,0"
+                           [value]="formatDisplayNota(alumno.id)"
+                           (input)="actualizarNotaInput(alumno.id, gradeInput.value, 'input', gradeInput)"
+                           (blur)="actualizarNotaInput(alumno.id, gradeInput.value, 'blur', gradeInput)">
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

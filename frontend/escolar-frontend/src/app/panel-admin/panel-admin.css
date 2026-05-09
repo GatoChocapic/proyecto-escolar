@@ -1,0 +1,122 @@
+/* ===== Estadísticas ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px !important;
+}
+
+.stat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.stat-icon.docentes { color: var(--info); }
+.stat-icon.apoderados { color: var(--accent); }
+.stat-icon.estudiantes { color: var(--success); }
+.stat-icon.admins { color: var(--warning); }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ===== Tabs ===== */
+.tab-icon {
+  margin-right: 8px;
+}
+
+.tab-content {
+  padding: 24px 0;
+}
+
+/* ===== Formulario ===== */
+.admin-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.admin-form mat-form-field:last-of-type {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ===== Chips de rol ===== */
+.role-chip {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.role-chip.docente {
+  background-color: var(--info);
+  color: #fff;
+}
+
+.role-chip.apoderado {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.role-chip.admin {
+  background-color: var(--warning);
+  color: #fff;
+}
+
+/* ===== Loading ===== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  gap: 16px;
+  color: #757575;
+}
+
+.empty-state {
+  text-align: center;
+  color: #9e9e9e;
+  padding: 24px;
+}
+
+/* ===== General ===== */
+.full-width {
+  width: 100%;
+}
+
+.form-card {
+  margin-bottom: 24px;
+}
+
+.list-card {
+  margin-bottom: 24px;
+}
