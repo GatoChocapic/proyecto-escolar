@@ -168,6 +168,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://localhost:4205",
+    "https://GatoChocapic.github.io",
 ]
 
 AUTH_USER_MODEL = 'escolar_api.Usuario'
