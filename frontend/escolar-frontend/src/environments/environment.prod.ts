@@ -4,5 +4,5 @@
  */
 export const environment = {
   production: true,
-  apiUrl: 'https://proyecto-escolar.onrender.com/api',
+  apiUrl: 'https://proyecto-escolar.onrender.com/api/',
 };

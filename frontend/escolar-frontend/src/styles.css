@@ -38,13 +38,13 @@
 .light {
   color-scheme: light;
 
-  /* Fondos - Azul muy pálido */
-  --bg-page:      #f0f4fc;
+  /* Fondos - Ajustados para mayor contraste y menor brillo */
+  --bg-page:      #edf1f7;
   --bg-card:      #ffffff;
-  --bg-card-2:    #f7f9ff;
+  --bg-card-2:    #f5f8fc;
   --bg-header:    #ffffff;
-  --bg-hover:     #ebf0ff;
-  --bg-subtle:    #f4f6fc;
+  --bg-hover:     #e4e9f7;
+  --bg-subtle:    #f0f3f9;
 
   /* Acento principal – Azulíndigo vivo */
   --brand:        #3d6fe8;
@@ -74,10 +74,10 @@
   --danger:   #e8344a;
   --info:     #3d6fe8;
 
-  /* Sombras multicapa con profundidad real */
-  --shadow-sm: 0 1px 3px rgba(61,111,232,0.06), 0 4px 12px rgba(61,111,232,0.08);
-  --shadow-md: 0 4px 12px rgba(61,111,232,0.08), 0 12px 32px rgba(61,111,232,0.12);
-  --shadow-lg: 0 8px 24px rgba(61,111,232,0.10), 0 24px 64px rgba(61,111,232,0.16);
+  /* Sombras reforzadas para mejor visibilidad sobre fondo suave */
+  --shadow-sm: 0 1px 3px rgba(61,111,232,0.10), 0 4px 12px rgba(61,111,232,0.14);
+  --shadow-md: 0 4px 12px rgba(61,111,232,0.14), 0 12px 32px rgba(61,111,232,0.20);
+  --shadow-lg: 0 8px 24px rgba(61,111,232,0.16), 0 24px 64px rgba(61,111,232,0.24);
   --shadow-glow: 0 0 0 3px rgba(61,111,232,0.15), 0 8px 24px rgba(61,111,232,0.18);
 
   /* Radios orgánicos */
@@ -210,7 +210,7 @@ html, body {
   box-shadow: var(--shadow-md) !important;
   background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
 }
 
@@ -357,8 +357,24 @@ table.full-width {
 }
 
 @media (max-width: 600px) {
+  .page-container {
+    padding: 12px 10px !important;
+    padding-top: 10px !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .header-bar {
+    padding: 10px 12px !important;
+  }
+  .stat-card {
+    padding: 20px 12px !important;
+  }
+  .quick-action-btn {
+    padding: 14px 12px !important;
+    font-size: 0.8rem !important;
+  }
   .content {
-    padding: 0 8px;
+    padding: 0 12px;
     margin: 16px auto;
   }
   .eval-form { grid-template-columns: 1fr; }
